@@ -1,50 +1,79 @@
 //RING
+
 import java.util.*;
 
 public class RingSimulation {
 public static void main(String[] args) {
 Scanner sc = new Scanner(System.in);
+// Input total nodes
 System.out.print("Enter total number of nodes: ");
 int n = sc.nextInt();
 boolean[] active = new boolean[n];
-
+// Initially all nodes are active
 for (int i = 0; i < n; i++) {
 active[i] = true;
 }
 
+// Input failed node
 System.out.print("Enter the ID of the node that fails (1 to " + n + "): ");
-
 int fail = sc.nextInt();
+
+// Validate failed node
+if (fail < 1 || fail > n) {
+System.out.println("Invalid node ID.");
+return;
+}
+
 active[fail - 1] = false;
 System.out.println("Node " + fail + " has failed.");
 
+// Input starting node
 System.out.print("Enter the ID of the node that starts the election (1 to " + n + "): ");
 int start = sc.nextInt();
 
-List<Integer> list = new ArrayList<>();
-int current = start - 1;
-list.add(start);
-System.out.println("\n[Node " + start + "] Starting election. Passing list: " + list);
+// Validate starting node
+if (start < 1 || start > n) {
+System.out.println("Invalid node ID.");
+return;
+}
 
+// Check if starting node is failed
+if (!active[start - 1]) {
+System.out.println("Election cannot start from a failed node.");
+return;
+}
+
+List<Integer> electionList = new ArrayList<>();
+int current = start - 1;
+// Add starting node
+electionList.add(start);
+System.out.println("\n[Node " + start + "] Starting election. Passing list: " + electionList);
+// Traverse ring
 int i = (current + 1) % n;
+
 while (i != current) {
 if (active[i]) {
-list.add(i + 1);
-System.out.println("[Node " + (i + 1) + "] Received list. Adding self and passing: " + list);
+electionList.add(i + 1);
+System.out.println("[Node " + (i + 1) + "] Received list. Adding self and passing: "+ electionList);
 }
 i = (i + 1) % n;
 }
 
-int leader = Collections.max(list);
-System.out.println("\n--- Election Over. Node " + leader + " is the Leader ---");
+// Find leader (highest ID)
+int leader = Collections.max(electionList);
+ System.out.println("\n--- Election Over ---");
+System.out.println("Node " + leader + " is elected as the Leader.");
+
+// Coordinator message
+System.out.println("\nCoordinator Message:");
 
 for (int j = 0; j < n; j++) {
 if (active[j]) {
-System.out.println("[Node " + (j + 1) + "] Acknowledged new Leader: " + leader);
+System.out.println("[Node " + (j + 1) + "] Acknowledged Leader: Node " + leader);
 }
-}
+ }
 sc.close();
-}
+ }
 }
 
 
