@@ -71,9 +71,9 @@ for (int j = 0; j < n; j++) {
 if (active[j]) {
 System.out.println("[Node " + (j + 1) + "] Acknowledged Leader: Node " + leader);
 }
- }
+}
 sc.close();
- }
+}
 }
 
 
