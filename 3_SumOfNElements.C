@@ -30,6 +30,5 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-
-  mpicc mpi.c -o mpi
-  mpirun -np 4 ./mpi
+# mpicc mpi.c -o mpi
+# mpirun -np 4 ./mpi
