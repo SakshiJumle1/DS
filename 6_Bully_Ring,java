@@ -43,81 +43,46 @@ sc.close();
 #RING
 
 import java.util.*;
-
-public class RingSimulation {
+public class RingSimple {
 public static void main(String[] args) {
 Scanner sc = new Scanner(System.in);
-// Input total nodes
-System.out.print("Enter total number of nodes: ");
+
+System.out.print("Enter number of processes: ");
 int n = sc.nextInt();
-boolean[] active = new boolean[n];
-// Initially all nodes are active
+boolean[] alive = new boolean[n];
+
+// Initially all processes are alive
 for (int i = 0; i < n; i++) {
-active[i] = true;
+alive[i] = true;
 }
 
-// Input failed node
-System.out.print("Enter the ID of the node that fails (1 to " + n + "): ");
-int fail = sc.nextInt();
+System.out.print("Enter failed process ID: ");
+int failed = sc.nextInt();
+alive[failed - 1] = false;
 
-// Validate failed node
-if (fail < 1 || fail > n) {
-System.out.println("Invalid node ID.");
-return;
-}
-
-active[fail - 1] = false;
-System.out.println("Node " + fail + " has failed.");
-
-// Input starting node
-System.out.print("Enter the ID of the node that starts the election (1 to " + n + "): ");
+System.out.print("Enter process to start election: ");
 int start = sc.nextInt();
+ArrayList<Integer> list = new ArrayList<>();
+int current = start;
 
-// Validate starting node
-if (start < 1 || start > n) {
-System.out.println("Invalid node ID.");
-return;
+System.out.println("\nElection starts:\n");
+do {
+if (alive[current - 1]) {
+list.add(current);
+System.out.print("Process " + current + " sends: ");
+System.out.println(list);
 }
 
-// Check if starting node is failed
-if (!active[start - 1]) {
-System.out.println("Election cannot start from a failed node.");
-return;
-}
+// Move to next process in ring
+current = (current % n) + 1;
+} while (current != start);
 
-List<Integer> electionList = new ArrayList<>();
-int current = start - 1;
-// Add starting node
-electionList.add(start);
-System.out.println("\n[Node " + start + "] Starting election. Passing list: " + electionList);
-// Traverse ring
-int i = (current + 1) % n;
-
-while (i != current) {
-if (active[i]) {
-electionList.add(i + 1);
-System.out.println("[Node " + (i + 1) + "] Received list. Adding self and passing: "+ electionList);
-}
-i = (i + 1) % n;
-}
-
-// Find leader (highest ID)
-int leader = Collections.max(electionList);
- System.out.println("\n--- Election Over ---");
-System.out.println("Node " + leader + " is elected as the Leader.");
-
-// Coordinator message
-System.out.println("\nCoordinator Message:");
-
-for (int j = 0; j < n; j++) {
-if (active[j]) {
-System.out.println("[Node " + (j + 1) + "] Acknowledged Leader: Node " + leader);
-}
-}
+// Find leader (max ID)
+int leader = Collections.max(list);
+System.out.println("\nLeader elected: Process " + leader);
 sc.close();
 }
 }
-
 
 javac Bully.java
 java Bully
