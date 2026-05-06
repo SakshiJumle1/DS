@@ -1,7 +1,7 @@
 #Bully
 import java.util.*;
 
-public class BullyFormattedDynamic {
+public class Bully {
 public static void main(String[] args) {
 Scanner sc = new Scanner(System.in);
 System.out.print("Enter total number of nodes: ");
@@ -43,7 +43,7 @@ sc.close();
 #RING
 
 import java.util.*;
-public class RingSimple {
+public class Ring {
 public static void main(String[] args) {
 Scanner sc = new Scanner(System.in);
 
